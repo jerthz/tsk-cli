@@ -1,0 +1,38 @@
+# 🚀 .gitignore pour un projet Go
+
+# Binaires compilés
+*.exe
+*.out
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+
+# Cache Go et modules
+/bin/
+/pkg/
+go.sum
+go.mod
+
+# Fichiers temporaires
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Répertoires spécifiques à l'IDE
+.idea/
+.vscode/
+*.iml
+
+# Dépendances vendored (si utilisé)
+vendor/
+
+# Dossier des tests et couverture
+*.test
+coverage.out
+
+# Exclure les fichiers de base de données SQLite (si utilisé)
+*.db
+*.sqlite
