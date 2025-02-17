@@ -19,3 +19,18 @@ type Task struct {
     Comment     string        `json:"comment"`
     Category    string        `json:"category"`
 }
+
+func (s TaskStatus) String() string {
+    switch s {
+        case Pending: 
+        return "Pending"
+    case InProgress:
+        return "In progress"
+    case Completed:
+        return "Completed"
+    case Stashed:
+        return "Stashed"
+    default:
+        return "Unknown"
+    }
+}

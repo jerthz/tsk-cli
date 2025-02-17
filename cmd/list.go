@@ -1,7 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
@@ -9,6 +5,8 @@ import (
     "github.com/spf13/cobra"
 )
 
+import . "go-todo-cli/models"
+import . "go-todo-cli/utils"
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
@@ -17,18 +15,47 @@ var listCmd = &cobra.Command{
     Long: `List all tasks. Only returns pending ones by default
     `,
     Run: func(cmd *cobra.Command, args []string) {
-        tasks := loadTasks()
-        if len(tasks) == 0 {
+        MasterInit()
+        tasks := LoadTasks()
+        filteredTasks := filterTasks(tasks)
+        if len(filteredTasks) == 0 {
             fmt.Println("📭 Aucune tâche enregistrée.")
             return
         }
+        grouped := groupByCategory(filteredTasks)
 
-        fmt.Println("\n\033[1m📋 Liste des tâches :\033[0m\n") 
-        for i, task := range tasks {
-            fmt.Printf("    %d. %s (Ajoutée le %s)\n", i+1, task.Description, task.CreatedAt.Format("02/01/2006 15:04"))
+        for category, taskList := range grouped {
+        fmt.Printf("\n\n")
+        c := category
+        if c == ""{
+            c = "No category"
         }
-        fmt.Println()
+        fmt.Printf("\033[1m %s :\033[0m\n\n", c)
+            for _, task := range taskList {
+                fmt.Printf("    [%d] - %s (%s)\n", task.Id, task.Description, task.Status.String())
+            }
+        }
+        fmt.Printf("\n\n")
     },
+}
+
+func filterTasks(tasks []Task) []Task{
+    var filtered []Task
+    for _, task := range tasks {
+        if category == "" || task.Category == category {
+            filtered = append(filtered, task)
+        }
+    }
+    return filtered
+}
+
+func groupByCategory(tasks []Task) map[string][]Task {
+    grouped := make(map[string][]Task)
+    for _, task := range tasks {
+        grouped[task.Category] = append(grouped[task.Category], task)
+    }
+
+    return grouped
 }
 
 var filter string
@@ -40,7 +67,7 @@ func init() {
     listCmd.Flags().BoolVarP(&detail, "detail", "d", false, "provide detailed view for each task")
     listCmd.Flags().StringVarP(&category, "category", "c", "", "returns tasks matching the given category")
     rootCmd.AddCommand(listCmd)
-    
+
     // Here you will define your flags and configuration settings.
 
     // Cobra supports Persistent Flags which will work for this command
