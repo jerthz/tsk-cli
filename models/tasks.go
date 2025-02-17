@@ -22,15 +22,15 @@ type Task struct {
 
 func (s TaskStatus) String() string {
     switch s {
-        case Pending: 
-        return "Pending"
+    case Pending:
+        return "\033[34mPending\033[0m" // Jaune
     case InProgress:
-        return "In progress"
+        return "\033[33mIn Progress\033[0m" // Bleu
     case Completed:
-        return "Completed"
+        return "\033[32mCompleted\033[0m" // Vert
     case Stashed:
-        return "Stashed"
+        return "\033[35mStashed\033[0m" // Violet
     default:
-        return "Unknown"
+        return "\033[31mUnknown\033[0m" // Rouge
     }
 }

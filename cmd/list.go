@@ -3,6 +3,7 @@ package cmd
 import (
     "fmt"
     "github.com/spf13/cobra"
+    "strings"
 )
 
 import . "go-todo-cli/models"
@@ -32,7 +33,7 @@ var listCmd = &cobra.Command{
         }
         fmt.Printf("\033[1m %s :\033[0m\n\n", c)
             for _, task := range taskList {
-                fmt.Printf("    [%d] - %s (%s)\n", task.Id, task.Description, task.Status.String())
+                fmt.Printf("    %d. %s (%s)\n", task.Id, task.Description, task.Status.String())
             }
         }
         fmt.Printf("\n\n")
@@ -40,13 +41,20 @@ var listCmd = &cobra.Command{
 }
 
 func filterTasks(tasks []Task) []Task{
-    var filtered []Task
+    var filteredCategory []Task
     for _, task := range tasks {
-        if category == "" || task.Category == category {
-            filtered = append(filtered, task)
+        if category == "" || strings.Contains(task.Category,category) {
+            filteredCategory = append(filteredCategory, task)
         }
     }
-    return filtered
+    var filteredText []Task
+    for _, task := range filteredCategory{
+        if filter == "" || strings.Contains(task.Description,filter) {
+            filteredText = append(filteredText, task)
+        }
+    }  
+
+    return filteredText
 }
 
 func groupByCategory(tasks []Task) map[string][]Task {
