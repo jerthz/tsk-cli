@@ -1,9 +1,7 @@
 package cmd
 
 import (
-    "encoding/json"
     "fmt"
-    "os"
     "time"
     "github.com/spf13/cobra"
 )
@@ -11,7 +9,6 @@ import (
 import . "go-todo-cli/models"
 import . "go-todo-cli/utils"
 
-// addCmd represents the add command
 var addCmd = &cobra.Command{
     Use:   "add",
     Short: "Add a new Todo task to the list",
@@ -32,7 +29,7 @@ var addCmd = &cobra.Command{
 
         tasks := LoadTasks()
         tasks = append(tasks, task)
-        saveTasks(tasks)
+        SaveTasks(tasks)
         masterConfig.LastId = nextId
         SaveMaster(masterConfig)
         fmt.Println("✅ New task added : \"", task.Description, "\"")
@@ -40,22 +37,6 @@ var addCmd = &cobra.Command{
     },
 }
 
-func saveTasks(tasks []Task) {
-    data, _ := json.MarshalIndent(tasks, "", "  ")
-    file, err := os.OpenFile(GetTaskFilePath(), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
-    if err != nil {
-        fmt.Println("Erreur lors de l'ouverture du fichier :", err)
-        return
-    }
-    defer file.Close()
-
-    _, err = file.Write(data)
-    if err != nil {
-        fmt.Println("Erreur lors de l'écriture dans le fichier :", err)
-    } else {
-        fmt.Println("Tâche sauvegardée avec succès !")
-    }
-}
 
 
 func init() {

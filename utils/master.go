@@ -93,3 +93,18 @@ func LoadTasks() []Task{
 func GetTaskFilePath() string {
     return GetTasksDirectoryPath() + "/task-cli-tasks.json"
 }
+
+func SaveTasks(tasks []Task) {
+    data, _ := json.MarshalIndent(tasks, "", "  ")
+    file, err := os.OpenFile(GetTaskFilePath(), os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+    if err != nil {
+        fmt.Println("Erreur lors de l'ouverture du fichier :", err)
+        return
+    }
+    defer file.Close()
+
+    _, err = file.Write(data)
+    if err != nil {
+        fmt.Println("Error while writing in the tasks file", err)
+    }
+}

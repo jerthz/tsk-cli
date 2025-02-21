@@ -26,12 +26,12 @@ var listCmd = &cobra.Command{
         grouped := groupByCategory(filteredTasks)
 
         for category, taskList := range grouped {
-        fmt.Printf("\n\n")
-        c := category
-        if c == ""{
-            c = "No category"
-        }
-        fmt.Printf("\033[1m %s :\033[0m\n\n", c)
+            fmt.Printf("\n\n")
+            c := category
+            if c == ""{
+                c = "No category"
+            }
+            fmt.Printf("\033[1m %s :\033[0m\n\n", c)
             for _, task := range taskList {
                 fmt.Printf("    %d. %s (%s)\n", task.Id, task.Description, task.Status.String())
             }
@@ -53,8 +53,14 @@ func filterTasks(tasks []Task) []Task{
             filteredText = append(filteredText, task)
         }
     }  
+    var filteredStatus []Task
+    for _, task := range filteredText {
+        if all || task.Status != Completed {
+            filteredStatus = append(filteredStatus, task)
+        }
+    }
 
-    return filteredText
+    return filteredStatus
 }
 
 func groupByCategory(tasks []Task) map[string][]Task {
@@ -69,20 +75,12 @@ func groupByCategory(tasks []Task) map[string][]Task {
 var filter string
 var category string
 var detail bool
+var all bool
 
 func init() {
     listCmd.Flags().StringVarP(&filter, "filter", "f", "", "returns tasks matching the given filter")
     listCmd.Flags().BoolVarP(&detail, "detail", "d", false, "provide detailed view for each task")
+    listCmd.Flags().BoolVarP(&all, "all", "a", false, "include all status, event completed tasks")
     listCmd.Flags().StringVarP(&category, "category", "c", "", "returns tasks matching the given category")
     rootCmd.AddCommand(listCmd)
-
-    // Here you will define your flags and configuration settings.
-
-    // Cobra supports Persistent Flags which will work for this command
-    // and all subcommands, e.g.:
-    // listCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-    // Cobra supports local flags which will only run when this command
-    // is called directly, e.g.:
-    // listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

@@ -1,40 +1,47 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 
-*/
 package cmd
 
 import (
 	"fmt"
-
+    "strconv"
 	"github.com/spf13/cobra"
+    . "go-todo-cli/models"
+    . "go-todo-cli/utils"
 )
 
-// pauseCmd represents the pause command
 var pauseCmd = &cobra.Command{
 	Use:   "pause",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Pause a task",
+	Long: `Pause a task by setting it to Stashed status.
+    `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("pause called")
-	},
+	    MasterInit()
+
+        id, err := strconv.Atoi(args[0])
+
+        if err != nil{
+            fmt.Printf("\nError : The task id is not an integer\n\n")
+            return
+        }
+
+        tasks := LoadTasks()
+
+        for i := range tasks{
+            if tasks[i].Id == id {
+                if tasks[i].Status == Completed {
+                   fmt.Printf("\nThe task is already completed\n\n") 
+                   return
+                }
+                tasks[i].Status = Stashed
+                SaveTasks(tasks)
+                fmt.Printf("\nTask successfully paused ! \n\n")
+                return
+            }
+        }
+        fmt.Printf("\n Unable to find the task with the given id...  \n\n")
+    },
 }
 
 func init() {
 	rootCmd.AddCommand(pauseCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// pauseCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// pauseCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
