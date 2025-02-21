@@ -20,7 +20,7 @@ var listCmd = &cobra.Command{
         tasks := LoadTasks()
         filteredTasks := filterTasks(tasks)
         if len(filteredTasks) == 0 {
-            fmt.Println("📭 Aucune tâche enregistrée.")
+            fmt.Printf("\n📭 No task registered.\n\n")
             return
         }
         grouped := groupByCategory(filteredTasks)
@@ -28,7 +28,7 @@ var listCmd = &cobra.Command{
         for category, taskList := range grouped {
             fmt.Printf("\n\n")
             c := category
-            if c == ""{
+            if c == "" {
                 c = "No category"
             }
             fmt.Printf("\033[1m %s :\033[0m\n\n", c)
@@ -55,12 +55,28 @@ func filterTasks(tasks []Task) []Task{
     }  
     var filteredStatus []Task
     for _, task := range filteredText {
-        if all || task.Status != Completed {
+        if all || strings.ToLower(status) == "completed" || task.Status != Completed {
             filteredStatus = append(filteredStatus, task)
         }
     }
 
-    return filteredStatus
+    var filteredStatus2 []Task
+    for _, task := range filteredStatus {
+        if status != "" {
+            taskStatus, err := StringToTaskStatus(status)
+            if err != nil{
+                fmt.Printf("\nThe given status does not exist, please use Pending|InProgress|Completed|Stashed\n\n")
+            }
+
+            if taskStatus == task.Status {
+                filteredStatus2 = append(filteredStatus2, task)
+            }
+        } else{
+            filteredStatus2 = append(filteredStatus2, task)
+        }
+    }
+
+    return filteredStatus2
 }
 
 func groupByCategory(tasks []Task) map[string][]Task {
@@ -76,11 +92,13 @@ var filter string
 var category string
 var detail bool
 var all bool
+var status string
 
 func init() {
     listCmd.Flags().StringVarP(&filter, "filter", "f", "", "returns tasks matching the given filter")
     listCmd.Flags().BoolVarP(&detail, "detail", "d", false, "provide detailed view for each task")
     listCmd.Flags().BoolVarP(&all, "all", "a", false, "include all status, event completed tasks")
     listCmd.Flags().StringVarP(&category, "category", "c", "", "returns tasks matching the given category")
+    listCmd.Flags().StringVarP(&status, "status", "s", "", "returns tesks matching the given status (Pending|InProgress|Completed|Stashed)")
     rootCmd.AddCommand(listCmd)
 }

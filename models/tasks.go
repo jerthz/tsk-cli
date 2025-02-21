@@ -1,6 +1,8 @@
 package models
 
 import "time"
+import "strings"
+import "fmt"
 
 type TaskStatus int
 const (
@@ -34,4 +36,19 @@ func (s TaskStatus) String() string {
     default:
         return "\033[31mUnknown\033[0m" // Rouge
     }
+}
+
+func StringToTaskStatus(statusStr string) (TaskStatus, error) {
+	switch strings.ToLower(statusStr) {
+	case "pending":
+		return Pending, nil
+	case "inprogress":
+		return InProgress, nil
+	case "completed":
+		return Completed, nil
+	case "stashed":
+		return Stashed, nil
+	default:
+		return -1, fmt.Errorf("❌ Statut inconnu : %s", statusStr)
+	}
 }
