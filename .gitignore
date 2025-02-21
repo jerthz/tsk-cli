@@ -13,7 +13,6 @@
 /bin/
 /pkg/
 go.sum
-go.mod
 
 # Fichiers temporaires
 *.log
