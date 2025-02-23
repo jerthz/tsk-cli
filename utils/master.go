@@ -156,3 +156,28 @@ func FilterTasks(tasks []Task) []Task{
 
     return filteredStatus2
 }
+
+
+func GetTaskById(taskId int) (Task, error) {
+    tasks := LoadTasks()
+    
+        for i := range tasks{
+            if tasks[i].Id == taskId {
+                return tasks[i], nil
+            }
+        }
+		return Task{}, fmt.Errorf("Unknown task : %d", taskId)
+}
+
+func UpdateTask(task Task) error {
+    tasks := LoadTasks()
+    
+        for i := range tasks{
+            if tasks[i].Id == task.Id {
+                tasks[i].Comment = task.Comment
+                SaveTasks(tasks)
+                return nil
+            }
+        }
+        return fmt.Errorf("Error while saving the task")
+}

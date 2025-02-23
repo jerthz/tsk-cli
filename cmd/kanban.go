@@ -17,6 +17,7 @@ var kanbanCmd = &cobra.Command{
     Short: "Affiche les tâches sous forme de tableau Kanban",
     Run: func(cmd *cobra.Command, args []string) {
         print("\033[H\033[2J")
+        All = true
         tasks := LoadTasks()
         filtered := FilterTasks(tasks)
         displayKanban(filtered)
@@ -25,7 +26,6 @@ var kanbanCmd = &cobra.Command{
 
 func groupTasksByStatus(tasks []Task) map[TaskStatus][]Task {
     grouped := make(map[TaskStatus][]Task)
-
     for r, task := range tasks {
         if r < 10 {
             grouped[task.Status] = append(grouped[task.Status], task)
@@ -41,10 +41,10 @@ func displayKanban(tasks []Task) {
     // Ordre des colonnes
     statusOrder := []TaskStatus{Stashed, Pending, InProgress, Completed}
     statusTitles := map[TaskStatus]string{
-        Stashed:    "📦 STASHED",
-        Pending:    "📝 TO-DO",
-        InProgress: "🚧 IN PROGRESS",
-        Completed:  "✅ DONE",
+        Stashed:    "📦 \033[1;35mSTASHED\033[0m",
+        Pending:    "📝 \033[1;34mTO-DO\033[0m",
+        InProgress: "🚧 \033[1;33mIN PROGRESS\033[0m",
+        Completed:  "✅ \033[1;32mDONE\033[0m",
     }
 
     maxRows := 0
@@ -55,7 +55,7 @@ func displayKanban(tasks []Task) {
     }
     fmt.Println("")
     for _, status := range statusOrder {
-        fmt.Printf("%-40s", statusTitles[status])
+        fmt.Printf("%-50s", statusTitles[status])
     }
     fmt.Println()
 
@@ -102,7 +102,7 @@ func computeLines(tasks []Task) []string {
 
     for _,task := range tasks {
         lines = append(lines, strings.Repeat("_", 35))
-        var title = fmt.Sprintf("\033[1mTask #%d\033[0m", task.Id)
+        var title = fmt.Sprintf("\033[1mTask #%d\033[0m - (%s)", task.Id, task.Category)
         lines = append(lines, "| " + title + strings.Repeat(" ", 40 - utf8.RuneCountInString(title)) + "|")
         lines = append(lines, "|"+ strings.Repeat("~", 33)+"|")
         var result []string
