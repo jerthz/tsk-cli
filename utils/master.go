@@ -5,6 +5,7 @@ import (
     "os"
     "errors"
     "encoding/json"
+    "strings"
 )
 
 import . "go-todo-cli/models"
@@ -107,4 +108,51 @@ func SaveTasks(tasks []Task) {
     if err != nil {
         fmt.Println("Error while writing in the tasks file", err)
     }
+}
+
+
+
+var Filter string
+var Category string
+var Detail bool
+var All bool
+var Status string
+
+func FilterTasks(tasks []Task) []Task{
+    var filteredCategory []Task
+    for _, task := range tasks {
+        if Category == "" || strings.Contains(task.Category,Category) {
+            filteredCategory = append(filteredCategory, task)
+        }
+    }
+    var filteredText []Task
+    for _, task := range filteredCategory{
+        if Filter == "" || strings.Contains(task.Description,Filter) {
+            filteredText = append(filteredText, task)
+        }
+    }  
+    var filteredStatus []Task
+    for _, task := range filteredText {
+        if All || strings.ToLower(Status) == "completed" || task.Status != Completed {
+            filteredStatus = append(filteredStatus, task)
+        }
+    }
+
+    var filteredStatus2 []Task
+    for _, task := range filteredStatus {
+        if Status != "" {
+            taskStatus, err := StringToTaskStatus(Status)
+            if err != nil{
+                fmt.Printf("\nThe given status does not exist, please use Pending|InProgress|Completed|Stashed\n\n")
+            }
+
+            if taskStatus == task.Status {
+                filteredStatus2 = append(filteredStatus2, task)
+            }
+        } else{
+            filteredStatus2 = append(filteredStatus2, task)
+        }
+    }
+
+    return filteredStatus2
 }

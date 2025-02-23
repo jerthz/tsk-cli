@@ -3,7 +3,6 @@ package cmd
 import (
     "fmt"
     "github.com/spf13/cobra"
-    "strings"
 )
 
 import . "go-todo-cli/models"
@@ -18,7 +17,7 @@ var listCmd = &cobra.Command{
     Run: func(cmd *cobra.Command, args []string) {
         MasterInit()
         tasks := LoadTasks()
-        filteredTasks := filterTasks(tasks)
+        filteredTasks := FilterTasks(tasks)
         if len(filteredTasks) == 0 {
             fmt.Printf("\n📭 No task registered.\n\n")
             return
@@ -40,44 +39,6 @@ var listCmd = &cobra.Command{
     },
 }
 
-func filterTasks(tasks []Task) []Task{
-    var filteredCategory []Task
-    for _, task := range tasks {
-        if category == "" || strings.Contains(task.Category,category) {
-            filteredCategory = append(filteredCategory, task)
-        }
-    }
-    var filteredText []Task
-    for _, task := range filteredCategory{
-        if filter == "" || strings.Contains(task.Description,filter) {
-            filteredText = append(filteredText, task)
-        }
-    }  
-    var filteredStatus []Task
-    for _, task := range filteredText {
-        if all || strings.ToLower(status) == "completed" || task.Status != Completed {
-            filteredStatus = append(filteredStatus, task)
-        }
-    }
-
-    var filteredStatus2 []Task
-    for _, task := range filteredStatus {
-        if status != "" {
-            taskStatus, err := StringToTaskStatus(status)
-            if err != nil{
-                fmt.Printf("\nThe given status does not exist, please use Pending|InProgress|Completed|Stashed\n\n")
-            }
-
-            if taskStatus == task.Status {
-                filteredStatus2 = append(filteredStatus2, task)
-            }
-        } else{
-            filteredStatus2 = append(filteredStatus2, task)
-        }
-    }
-
-    return filteredStatus2
-}
 
 func groupByCategory(tasks []Task) map[string][]Task {
     grouped := make(map[string][]Task)
@@ -88,17 +49,11 @@ func groupByCategory(tasks []Task) map[string][]Task {
     return grouped
 }
 
-var filter string
-var category string
-var detail bool
-var all bool
-var status string
-
 func init() {
-    listCmd.Flags().StringVarP(&filter, "filter", "f", "", "returns tasks matching the given filter")
-    listCmd.Flags().BoolVarP(&detail, "detail", "d", false, "provide detailed view for each task")
-    listCmd.Flags().BoolVarP(&all, "all", "a", false, "include all status, event completed tasks")
-    listCmd.Flags().StringVarP(&category, "category", "c", "", "returns tasks matching the given category")
-    listCmd.Flags().StringVarP(&status, "status", "s", "", "returns tesks matching the given status (Pending|InProgress|Completed|Stashed)")
+    listCmd.Flags().StringVarP(&Filter, "filter", "f", "", "returns tasks matching the given filter")
+    listCmd.Flags().BoolVarP(&Detail, "detail", "d", false, "provide detailed view for each task")
+    listCmd.Flags().BoolVarP(&All, "all", "a", false, "include all status, event completed tasks")
+    listCmd.Flags().StringVarP(&Category, "category", "c", "", "returns tasks matching the given category")
+    listCmd.Flags().StringVarP(&Status, "status", "s", "", "returns tesks matching the given status (Pending|InProgress|Completed|Stashed)")
     rootCmd.AddCommand(listCmd)
 }

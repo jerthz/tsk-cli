@@ -23,7 +23,7 @@ var addCmd = &cobra.Command{
             Id: nextId,
             Description:    args[0],
             CreatedAt:  time.Now(),
-            Category:   category,
+            Category:   Category,
             Status: Pending,
         }
 
@@ -40,6 +40,6 @@ var addCmd = &cobra.Command{
 
 
 func init() {
-    addCmd.Flags().StringVarP(&category, "category", "c", "", "Add this task inside the given category")
+    addCmd.Flags().StringVarP(&Category, "category", "c", "", "Add this task inside the given category")
     rootCmd.AddCommand(addCmd)
 }
