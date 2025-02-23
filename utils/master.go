@@ -127,7 +127,7 @@ func FilterTasks(tasks []Task) []Task{
     }
     var filteredText []Task
     for _, task := range filteredCategory{
-        if Filter == "" || strings.Contains(task.Description,Filter) {
+        if Filter == "" || strings.Contains(task.Title,Filter) {
             filteredText = append(filteredText, task)
         }
     }  
@@ -174,7 +174,9 @@ func UpdateTask(task Task) error {
     
         for i := range tasks{
             if tasks[i].Id == task.Id {
-                tasks[i].Comment = task.Comment
+                tasks[i].Title = task.Title
+                tasks[i].Category= task.Category
+                tasks[i].Description = task.Description
                 SaveTasks(tasks)
                 return nil
             }

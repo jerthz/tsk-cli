@@ -19,7 +19,7 @@ type Task struct {
     Status      TaskStatus    `json:"status"`
     StartedAt   time.Time     `json:"startedAt"`
     CompletedAt  time.Time     `json:"completedAt"`
-    Comment     string        `json:"comment"`
+    Title     string        `json:"title"`
     Category    string        `json:"category"`
 }
 
@@ -39,16 +39,16 @@ func (s TaskStatus) String() string {
 }
 
 func StringToTaskStatus(statusStr string) (TaskStatus, error) {
-	switch strings.ToLower(statusStr) {
-	case "pending":
-		return Pending, nil
-	case "inprogress":
-		return InProgress, nil
-	case "completed":
-		return Completed, nil
-	case "stashed":
-		return Stashed, nil
-	default:
-		return -1, fmt.Errorf("❌ Statut inconnu : %s", statusStr)
-	}
+    switch strings.ToLower(statusStr) {
+    case "pending":
+        return Pending, nil
+    case "inprogress":
+        return InProgress, nil
+    case "completed":
+        return Completed, nil
+    case "stashed":
+        return Stashed, nil
+    default:
+        return -1, fmt.Errorf("❌ Statut inconnu : %s", statusStr)
+    }
 }

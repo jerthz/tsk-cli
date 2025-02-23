@@ -16,6 +16,7 @@ var kanbanCmd = &cobra.Command{
     Use:   "kanban",
     Short: "Affiche les tâches sous forme de tableau Kanban",
     Run: func(cmd *cobra.Command, args []string) {
+        MasterInit()
         print("\033[H\033[2J")
         All = true
         tasks := LoadTasks()
@@ -106,7 +107,7 @@ func computeLines(tasks []Task) []string {
         lines = append(lines, "| " + title + strings.Repeat(" ", 40 - utf8.RuneCountInString(title)) + "|")
         lines = append(lines, "|"+ strings.Repeat("~", 33)+"|")
         var result []string
-        var tmp = task.Description
+        var tmp = task.Title
         for utf8.RuneCountInString(tmp) > 31 {
             result = append(result, tmp[:31])
             tmp = tmp[31:]
@@ -117,7 +118,7 @@ func computeLines(tasks []Task) []string {
 
         for _, line := range result{
             lineLen := utf8.RuneCountInString(line)
-            if len(line) < 31 {
+            if lineLen < 31 {
                 lines = append(lines, "| " + line + strings.Repeat(" ", 32 - lineLen) + "|")
             }else{
                 lines = append(lines, "| " + line + " |")

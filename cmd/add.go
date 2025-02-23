@@ -12,18 +12,33 @@ import . "go-todo-cli/utils"
 var addCmd = &cobra.Command{
     Use:   "add",
     Short: "Add a new Todo task to the list",
-    Args: cobra.MinimumNArgs(1),
     Run: func(cmd *cobra.Command, args []string) {
         MasterInit()
+        print("\033[H\033[2J")
         masterConfig := LoadMaster()
         nextId := masterConfig.LastId + 1
+        content, err := OpenTaskEditor("Title", "None", "Long description") 
+        
+        if err != nil {
+            fmt.Println("Error while editing task")
+            return
+        }
+
+        editedTask := ParseTask(content)
+
+        if editedTask.Title == "" {
+            fmt.Printf("\n Error : Title must not be empty")
+        }
+            
+
 
 
         task := Task{
             Id: nextId,
-            Description:    args[0],
+            Title: editedTask.Title,
+            Description:    editedTask.Description,
             CreatedAt:  time.Now(),
-            Category:   Category,
+            Category:   editedTask.Category,
             Status: Pending,
         }
 
@@ -32,14 +47,12 @@ var addCmd = &cobra.Command{
         SaveTasks(tasks)
         masterConfig.LastId = nextId
         SaveMaster(masterConfig)
-        fmt.Println("✅ New task added : \"", task.Description, "\"")
+        fmt.Println("✅ New task added : \"", task.Title, "\"")
 
     },
 }
 
 
-
 func init() {
-    addCmd.Flags().StringVarP(&Category, "category", "c", "", "Add this task inside the given category")
     rootCmd.AddCommand(addCmd)
 }

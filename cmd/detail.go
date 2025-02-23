@@ -21,6 +21,7 @@ var detailCmd = &cobra.Command{
     Args: cobra.MinimumNArgs(1),
     Run: func(cmd *cobra.Command, args []string) {
         MasterInit()
+        print("\033[H\033[2J")
         id, err := strconv.Atoi(args[0])
 
         if err != nil {
@@ -42,11 +43,11 @@ var detailCmd = &cobra.Command{
 
 func displayDetailedTask(task Task) {
     fmt.Printf("\n\033[1mTask Id :\033[0m %d \n", task.Id) 
-    fmt.Printf("\033[1mTask Title :\033[0m %s \n", task.Description) 
+    fmt.Printf("\033[1mTask Title :\033[0m %s \n", task.Title) 
     fmt.Printf("\033[1mTask Status :\033[0m %s \n", task.Status.String())
 
-    if task.Comment != "" {
-        fmt.Printf("\n\033[1mComment :\033[0m\n\n%s \n", task.Comment)
+    if task.Description != "" {
+        fmt.Printf("\n\033[1mComment :\033[0m\n\n%s \n", task.Description)
     }
     fmt.Println("\n")
 

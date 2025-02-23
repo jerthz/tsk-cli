@@ -15,7 +15,8 @@ var pauseCmd = &cobra.Command{
 	Long: `Pause a task by setting it to Stashed status.
     `,
 	Run: func(cmd *cobra.Command, args []string) {
-	    MasterInit()
+        MasterInit()
+        print("\033[H\033[2J")
 
         id, err := strconv.Atoi(args[0])
 

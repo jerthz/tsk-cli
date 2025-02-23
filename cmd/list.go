@@ -16,6 +16,7 @@ var listCmd = &cobra.Command{
     `,
     Run: func(cmd *cobra.Command, args []string) {
         MasterInit()
+        print("\033[H\033[2J")
         tasks := LoadTasks()
         filteredTasks := FilterTasks(tasks)
         if len(filteredTasks) == 0 {
@@ -32,7 +33,7 @@ var listCmd = &cobra.Command{
             }
             fmt.Printf("\033[1m %s :\033[0m\n\n", c)
             for _, task := range taskList {
-                fmt.Printf("    %d. %s (%s)\n", task.Id, task.Description, task.Status.String())
+                fmt.Printf("    %d. %s (%s)\n", task.Id, task.Title, task.Status.String())
             }
         }
         fmt.Printf("\n\n")
