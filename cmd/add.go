@@ -47,8 +47,9 @@ var addCmd = &cobra.Command{
         SaveTasks(tasks)
         masterConfig.LastId = nextId
         SaveMaster(masterConfig)
+        fmt.Println()
         fmt.Println("✅ New task added : \"", task.Title, "\"")
-
+        fmt.Println()
     },
 }
 

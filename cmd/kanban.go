@@ -27,10 +27,8 @@ var kanbanCmd = &cobra.Command{
 
 func groupTasksByStatus(tasks []Task) map[TaskStatus][]Task {
     grouped := make(map[TaskStatus][]Task)
-    for r, task := range tasks {
-        if r < 10 {
-            grouped[task.Status] = append(grouped[task.Status], task)
-        }
+    for _, task := range tasks {
+        grouped[task.Status] = append(grouped[task.Status], task)
     }
 
     return grouped
