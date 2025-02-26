@@ -33,13 +33,22 @@ var addCmd = &cobra.Command{
             fmt.Printf("\n Error : Title must not be empty")
         }
 
+        var completed time.Time
+        status := Pending
+
+        if trace {
+            completed = time.Now()
+            status = Completed
+        }
+
         task := Task{
             Id:          nextId,
             Title:       editedTask.Title,
             Description: editedTask.Description,
             CreatedAt:   time.Now(),
+            CompletedAt: completed,
             Category:    editedTask.Category,
-            Status:      Pending,
+            Status:      status,
         }
 
         tasks := LoadTasks()
@@ -51,8 +60,12 @@ var addCmd = &cobra.Command{
         fmt.Println("✅ New task added : \"", task.Id, " - ", task.Title, "\"")
         fmt.Println()
     },
+
 }
+var trace bool
+
 
 func init() {
+    addCmd.Flags().BoolVarP(&trace, "trace", "t", false, "Add a task but just to trace it exists, by setting it to Completed immediatly")
     rootCmd.AddCommand(addCmd)
 }

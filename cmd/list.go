@@ -11,6 +11,7 @@ import . "go-todo-cli/utils"
 // listCmd represents the list command
 var listCmd = &cobra.Command{
     Use:   "list",
+    Aliases: []string{"l"}, 
     Short: "List all tasks",
     Long: `List all tasks. Only returns pending ones by default
     `,
