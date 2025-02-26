@@ -16,7 +16,6 @@ var pauseCmd = &cobra.Command{
     `,
 	Run: func(cmd *cobra.Command, args []string) {
         MasterInit()
-        print("\033[H\033[2J")
 
         id, err := strconv.Atoi(args[0])
 

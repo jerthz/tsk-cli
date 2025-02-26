@@ -27,7 +27,6 @@ func filterDaily(tasks []Task) []Task {
 	var filteredDaily []Task
 	startYesterday := time.Now().AddDate(0, 0, -1).Truncate(24 * time.Hour)
 	endYesterday := startYesterday.Add(23*time.Hour + 59*time.Minute + 59*time.Second)
-
 	for _, task := range tasks {
 		if (!task.StartedAt.IsZero() &&
 			(task.StartedAt.After(startYesterday) && task.StartedAt.Before(endYesterday))) ||
@@ -40,10 +39,10 @@ func filterDaily(tasks []Task) []Task {
 }
 
 func init() {
-	rootCmd.Flags().StringVarP(&Filter, "filter", "f", "", "returns tasks matching the given filter")
-	rootCmd.Flags().BoolVarP(&Detail, "detail", "d", false, "provide detailed view for each task")
-	rootCmd.Flags().BoolVarP(&All, "all", "a", false, "include all status, event completed tasks")
-	rootCmd.Flags().StringVarP(&Category, "category", "c", "", "returns tasks matching the given category")
-	rootCmd.Flags().StringVarP(&Status, "status", "s", "", "returns tesks matching the given status (Pending|InProgress|Completed|Stashed)")
+	dailyCmd.Flags().StringVarP(&Filter, "filter", "f", "", "returns tasks matching the given filter")
+	dailyCmd.Flags().BoolVarP(&Detail, "detail", "d", false, "provide detailed view for each task")
+	dailyCmd.Flags().BoolVarP(&All, "all", "a", false, "include all status, event completed tasks")
+	dailyCmd.Flags().StringVarP(&Category, "category", "c", "", "returns tasks matching the given category")
+	dailyCmd.Flags().StringVarP(&Status, "status", "s", "", "returns tesks matching the given status (Pending|InProgress|Completed|Stashed)")
 	rootCmd.AddCommand(dailyCmd)
 }
