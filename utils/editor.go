@@ -16,8 +16,7 @@ type EditorTask struct {
 
 
 func OpenTaskEditor(title string, category string, comment string) (string, error){
-    template := `# Title
-%s
+    template := `%s
 
 # Category
 %s
@@ -59,7 +58,7 @@ func OpenTaskEditor(title string, category string, comment string) (string, erro
 func ParseTask(content string) EditorTask {
     var editedTask EditorTask
 
-    titleRegex := regexp.MustCompile(`(?m)^# Title\n(.+)\n`)
+    titleRegex := regexp.MustCompile(`(?m)^(.*)$`)
 	categoryRegex := regexp.MustCompile(`(?m)^# Category\n(.+)\n`)
 	descriptionRegex := regexp.MustCompile(`(?m)^# Description\n((?:.|\n)*)`)
 

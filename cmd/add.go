@@ -15,8 +15,12 @@ var addCmd = &cobra.Command{
     Run: func(cmd *cobra.Command, args []string) {
         MasterInit()
         masterConfig := LoadMaster()
+        category := "None"
+        if masterConfig.DefaultCategory != "" {
+            category = masterConfig.DefaultCategory
+        }
         nextId := masterConfig.LastId + 1
-        content, err := OpenTaskEditor("Title", "None", "Long description")
+        content, err := OpenTaskEditor("Title", category, "")
 
         if err != nil {
             fmt.Println("Error while editing task")

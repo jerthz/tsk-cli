@@ -36,7 +36,7 @@ var endCmd = &cobra.Command{
                 tasks[i].Status = Completed
                 tasks[i].CompletedAt = time.Now()    
                 SaveTasks(tasks)
-                fmt.Printf("\nTask successfully completed ! \n\n")
+                fmt.Printf("\n✅  Task successfully completed ! \n\n")
                 return
             }
         }

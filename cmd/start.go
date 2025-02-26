@@ -39,7 +39,7 @@ var startCmd = &cobra.Command{
                 tasks[i].Status = InProgress
                 tasks[i].StartedAt = time.Now()
                 SaveTasks(tasks)
-                fmt.Printf("\nTask successfully started !\n\n")
+                fmt.Printf("\n✅  Task successfully started !\n\n")
                 return
             }
         }

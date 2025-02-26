@@ -34,7 +34,7 @@ var pauseCmd = &cobra.Command{
                 }
                 tasks[i].Status = Stashed
                 SaveTasks(tasks)
-                fmt.Printf("\nTask successfully paused ! \n\n")
+                fmt.Printf("\n✅  Task successfully paused ! \n\n")
                 return
             }
         }
