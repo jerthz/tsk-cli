@@ -23,25 +23,28 @@ var listCmd = &cobra.Command{
             fmt.Printf("\n📭 No task registered.\n\n")
             return
         }
-        grouped := groupByCategory(filteredTasks)
-
-        for category, taskList := range grouped {
-            fmt.Printf("\n\n")
-            c := category
-            if c == "" {
-                c = "No category"
-            }
-            fmt.Printf("\033[1m %s :\033[0m\n\n", c)
-            for _, task := range taskList {
-                fmt.Printf("    %d. %s (%s)\n", task.Id, task.Title, task.Status.String())
-            }
-        }
-        fmt.Printf("\n\n")
+        grouped := GroupByCategory(filteredTasks)
+        DisplayInline(grouped)
     },
 }
 
+func DisplayInline(grouped map[string][]Task) {
+    for category, taskList := range grouped {
+        fmt.Printf("\n\n")
+        c := category
+        if c == "" {
+            c = "No category"
+        }
+        fmt.Printf("\033[1m %s :\033[0m\n\n", c)
+        for _, task := range taskList {
+            fmt.Printf("    %d. %s (%s)\n", task.Id, task.Title, task.Status.String())
+        }
+    }
+    fmt.Printf("\n\n")
+}
 
-func groupByCategory(tasks []Task) map[string][]Task {
+
+func GroupByCategory(tasks []Task) map[string][]Task {
     grouped := make(map[string][]Task)
     for _, task := range tasks {
         grouped[task.Category] = append(grouped[task.Category], task)
